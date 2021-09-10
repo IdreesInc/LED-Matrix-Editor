@@ -4,26 +4,56 @@
     <meta charset="UTF-8">
     <title>LED Matrix</title>
     <link rel="stylesheet" href="/stylesheet.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
     <body>
         <div id="matrix"></div>
+        <div id="cons">hiya</div>
         <script>
             let matrix = document.getElementById("matrix");
 
             function createDot(row, column) {
                 let cell = document.createElement("div");
+                cell.id = "cell-" + row + "-" + column;
                 cell.className = "cell";
                 let dot = document.createElement("div");
+                dot.id = "dot-" + row + "-" + column;
                 dot.className = "dot";
                 cell.appendChild(dot);
                 matrix.appendChild(cell);
             }
 
-            for (let column = 0; column < 32; column++) {
-                for (let row = 0; row < 32; row++) {
+            function draw(x, y) {
+                let rect = matrix.getBoundingClientRect();
+                let column = Math.floor(x / (rect.width / 32));
+                let row = Math.floor(y / (rect.height / 32));
+                document.getElementById("dot-" + row + "-" + column).classList.add("glow");
+                document.getElementById("cons").innerHTML = ("drawing at " + x + " " + y)
+            }
+
+            for (let row = 0; row < 32; row++) {
+                for (let column = 0; column < 32; column++) {
                     createDot(row, column);
                 }
             }
+
+            ["mousedown", "mousemove"].forEach(eventName => matrix.addEventListener(eventName, e => {
+                if (e.buttons > 0) {
+                    let rect = matrix.getBoundingClientRect();
+                    let x = e.clientX - rect.left;
+                    let y = e.clientY - rect.top;
+                    draw(x, y)
+                }
+            }));
+
+            ["touchstart", "touchmove"].forEach(eventName => matrix.addEventListener(eventName, e => {
+                if (e.touches.length === 1) {
+                    let rect = matrix.getBoundingClientRect();
+                    let x = e.touches[0].clientX - rect.left;
+                    let y = e.touches[0].clientY - rect.top;
+                    draw(x, y)
+                }
+            }));
         </script>
     </body>
 </html>
