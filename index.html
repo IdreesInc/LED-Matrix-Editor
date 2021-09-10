@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LED Matrix</title>
+    <link rel="stylesheet" href="/stylesheet.css">
+</head>
+    <body>
+        <div id="matrix"></div>
+        <script>
+            let matrix = document.getElementById("matrix");
+
+            function createDot(row, column) {
+                let cell = document.createElement("div");
+                cell.className = "cell";
+                let dot = document.createElement("div");
+                dot.className = "dot";
+                cell.appendChild(dot);
+                matrix.appendChild(cell);
+            }
+
+            for (let column = 0; column < 32; column++) {
+                for (let row = 0; row < 32; row++) {
+                    createDot(row, column);
+                }
+            }
+        </script>
+    </body>
+</html>
