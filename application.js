@@ -20,6 +20,9 @@ let eraser = false;
 function init() {
     initMatrix();
     initColorUI();
+    if (inIframe()) {
+        document.body.style.background = "none";
+    }
 }
 
 function initMatrix() {
@@ -175,6 +178,14 @@ function updateWheel() {
 
 function getColor(opacity = 1) {
     return "rgba(" + color[0] +"," + color[1] + "," + color[2] + "," + opacity + ")";
+}
+
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
 }
 
 init();
