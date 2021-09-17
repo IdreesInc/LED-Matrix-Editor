@@ -1,15 +1,23 @@
 const INITIAL_COLOR = [255, 64, 64];
-const NUM_OF_COLORS = 8;
+const NUM_OF_COLORS = 10;
+const OFF_COLOR = "rgb(155, 155, 155)";
 
 let matrix = document.getElementById("matrix");
 let palette = document.getElementById("palette");
 
 let color = INITIAL_COLOR;
-let previousColors = [];
+let previousColors = [
+    [255, 146, 76],
+    [255, 202, 58],
+    [138, 201, 38],
+    [25, 130, 196]
+];
+let colorWheel;
+let eraser = false;
 
 function init() {
     initMatrix();
-    initColorWheel();
+    initColorUI();
 }
 
 function initMatrix() {
@@ -24,7 +32,7 @@ function initMatrix() {
             let rect = matrix.getBoundingClientRect();
             let x = e.clientX - rect.left;
             let y = e.clientY - rect.top;
-            draw(x, y)
+            drawAtCoordinates(x, y)
         }
     }));
     
@@ -33,14 +41,14 @@ function initMatrix() {
             let rect = matrix.getBoundingClientRect();
             let x = e.touches[0].clientX - rect.left;
             let y = e.touches[0].clientY - rect.top;
-            draw(x, y)
+            drawAtCoordinates(x, y)
         }
     }));
 }
 
-function initColorWheel() {
-    let width = Math.min(palette.offsetWidth / 3, 250);
-    let colorWheel = new ReinventedColorWheel({
+function initColorUI() {
+    let width = Math.min(palette.offsetWidth / 4, 250);
+    colorWheel = new ReinventedColorWheel({
         appendTo: document.getElementById("color-wheel"),
         rgb: INITIAL_COLOR,
         wheelDiameter: width,
@@ -55,7 +63,7 @@ function initColorWheel() {
 
     document.getElementById("color-wheel").style.width = width + "px";
     document.getElementById("color-wheel").style.height = width + "px";
-    document.documentElement.style.setProperty("--circle-diameter", width * 0.35 + "px");
+    document.documentElement.style.setProperty("--circle-diameter", width * 0.40 + "px");
     
     colorWheel.redraw();
 
@@ -70,8 +78,30 @@ function initColorWheel() {
                 color = previousColors[i - 1];
                 previousColors.splice(i - 1, 1);
                 palette.style.background = getColor();
+                eraser = false;
+                document.getElementById("eraser").classList.remove("control-selected");
                 updatePaletteColors();
+                updateWheel();
             }
+        }
+    }
+
+    document.getElementById("eraser").onclick = () => {
+        eraser = true;
+        palette.style.background = "rgba(255, 255, 255, 0.5)";
+        document.getElementById("eraser").classList.add("control-selected");
+    }
+
+    document.getElementById("clear").onclick = () => {
+        if (confirm("Are you sure you want to clear your drawing?")) {
+            let previousEraser = eraser;
+            eraser = true;
+            for (let row = 0; row < 32; row++) {
+                for (let column = 0; column < 32; column++) {
+                    draw(column, row);
+                }
+            }
+            eraser = previousEraser;
         }
     }
 }
@@ -83,29 +113,45 @@ function createDot(row, column) {
     let dot = document.createElement("div");
     dot.id = "dot-" + row + "-" + column;
     dot.className = "dot";
+    dot.classList.add("dim");
     cell.appendChild(dot);
     matrix.appendChild(cell);
 }
 
-function draw(x, y) {
+function drawAtCoordinates(x, y) {
     let rect = matrix.getBoundingClientRect();
     let column = Math.floor(x / (rect.width / 32));
     let row = Math.floor(y / (rect.height / 32));
+    draw(row, column);
+}
+
+function draw(row, column) {
     let dot = document.getElementById("dot-" + row + "-" + column);
-    dot.classList.add("glow");
-    dot.style.background = getColor();
-    dot.style.boxShadow = "0 0px 12px " + getColor(0.6);
-    updatePaletteColors();
+    if (eraser) {
+        dot.classList.add("dim");
+        dot.classList.remove("glow");
+        dot.style.background = OFF_COLOR;
+    } else {
+        dot.classList.remove("dim");
+        dot.classList.add("glow");
+        dot.style.backgroundColor = getColor();
+        updatePaletteColors();
+    }
 }
 
 function updatePaletteColors() {
-    if (previousColors[0] === color) {
+    if (JSON.stringify(previousColors[0]) === JSON.stringify(color)) {
         return;
     }
     previousColors.unshift(color);
     for (let i = 1; i <= Math.min(NUM_OF_COLORS, previousColors.length); i++) {
         document.getElementById("color-" + i).style.background = "rgb(" + previousColors[i-1][0] +"," + previousColors[i-1][1] + "," + previousColors[i-1][2] + ")";
     }
+}
+
+function updateWheel() {
+    colorWheel.rgb = color;
+    colorWheel.redraw();
 }
 
 function getColor(opacity = 1) {
