@@ -1,16 +1,18 @@
-const INITIAL_COLOR = [255, 64, 64];
-const NUM_OF_COLORS = 10;
+const INITIAL_COLOR = [255, 202, 58];
+const NUM_OF_COLORS = 9;
 const OFF_COLOR = "rgb(155, 155, 155)";
 
 let matrix = document.getElementById("matrix");
 let palette = document.getElementById("palette");
-
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 let color = INITIAL_COLOR;
 let previousColors = [
     [255, 146, 76],
-    [255, 202, 58],
+    [255, 64, 64],
     [138, 201, 38],
     [25, 130, 196]
+
 ];
 let colorWheel;
 let eraser = false;
@@ -92,8 +94,17 @@ function initColorUI() {
         document.getElementById("eraser").classList.add("control-selected");
     }
 
+    document.getElementById("save").onclick = () => {
+        // Snippet from https://github.com/gillyb/reimg
+        let a = document.createElement('a');
+        a.href = canvas.toDataURL();
+        a.download = "graduation-cap-design";
+        document.body.appendChild(a);
+        a.click();
+    }
+
     document.getElementById("clear").onclick = () => {
-        if (confirm("Are you sure you want to clear your drawing?")) {
+        if (confirm("Are you sure you want to clear away everything? There is no way to undo this!")) {
             let previousEraser = eraser;
             eraser = true;
             for (let row = 0; row < 32; row++) {
@@ -130,12 +141,20 @@ function draw(row, column) {
     if (eraser) {
         dot.classList.add("dim");
         dot.classList.remove("glow");
+        dot.style.boxShadow = null;
         dot.style.background = OFF_COLOR;
+        ctx.clearRect(column, row, 1, 1);
     } else {
         dot.classList.remove("dim");
         dot.classList.add("glow");
+        dot.style.boxShadow = "0 0px 12px " + getColor(0.6);
         dot.style.backgroundColor = getColor();
         updatePaletteColors();
+        ctx.beginPath();
+        ctx.fillStyle = getColor();
+        ctx.rect(column, row, 1, 1);
+        ctx.fill();
+        ctx.closePath();
     }
 }
 

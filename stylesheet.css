@@ -119,7 +119,7 @@ body {
 }
 
 .control-selected {
-    background: grey;
+    background: rgb(128, 128, 128);
 }
 
 .eraser-icon {
@@ -127,11 +127,18 @@ body {
     background-size: contain;
     width: 60%;
     height: 60%;
-    transform: scale(1, -1);
+    transform: scale(-1, -1);
 }
 
 .clear-icon {
     background-image: url("./images/wastebasket.png");
+    background-size: contain;
+    width: 60%;
+    height: 60%;
+}
+
+.save-icon {
+    background-image: url("./images/save.png");
     background-size: contain;
     width: 60%;
     height: 60%;
@@ -146,6 +153,10 @@ body {
     justify-content: space-between;
 }
 
+#canvas {
+    display: none;
+}
+
 @media (hover: hover) {
     .cell:hover {
         padding: 0.25%;
@@ -157,6 +168,10 @@ body {
         transition-duration: 0.25s;
         z-index: 2;
         cursor: pointer;
+    }
+
+    .dangerous-control:hover {
+        background: rgb(255, 79, 79);
     }
 }
 

@@ -26,18 +26,21 @@
                     <div class="circle" id="color-7"></div>
                     <div class="circle" id="color-8"></div>
                     <div class="circle" id="color-9"></div>
-                    <div class="circle" id="color-10"></div>
+                    <div id="eraser" class="circle control" title="Eraser">
+                        <div class="eraser-icon"></div>
+                    </div>
                 </div>
             </div>
             <div id="color-controls">
-                <div id="eraser" class="circle control" title="Eraser">
-                    <div class="eraser-icon"></div>
+                <div id="save" class="circle control" title="Save your design">
+                    <div class="save-icon"></div>
                 </div>
-                <div id="clear" class="circle control" title="Clear Everything">
+                <div id="clear" class="circle control dangerous-control" title="Clear away everything">
                     <div class="clear-icon"></div>
                 </div>
             </div>
         </div>
+        <canvas id="canvas" width="32" height="32"></canvas>
         <script src="./application.js"></script>
     </body>
 </html>
