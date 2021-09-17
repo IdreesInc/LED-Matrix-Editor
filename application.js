@@ -1,9 +1,11 @@
 const INITIAL_COLOR = [255, 64, 64];
+const NUM_OF_COLORS = 8;
 
 let matrix = document.getElementById("matrix");
 let palette = document.getElementById("palette");
 
 let color = INITIAL_COLOR;
+let previousColors = [];
 
 function init() {
     initMatrix();
@@ -37,23 +39,38 @@ function initMatrix() {
 }
 
 function initColorWheel() {
+    let width = Math.min(palette.offsetWidth / 3, 250);
     let colorWheel = new ReinventedColorWheel({
         appendTo: document.getElementById("color-wheel"),
         rgb: INITIAL_COLOR,
-        wheelDiameter: 200,
+        wheelDiameter: width,
         wheelThickness: 20,
         handleDiameter: 20,
         wheelReflectsSaturation: false,
         onChange: function (newColor) {
             color = newColor.rgb;
             palette.style.background = getColor();
-            console.log(color)
         },
     });
+
+    document.getElementById("color-wheel").style.width = width + "px";
+    document.getElementById("color-wheel").style.height = width + "px";
+    document.documentElement.style.setProperty("--circle-diameter", width * 0.35 + "px");
     
     colorWheel.redraw();
 
     palette.style.background = getColor();
+    updatePaletteColors();
+
+    for (let i = 1; i <= NUM_OF_COLORS; i++) {
+        document.getElementById("color-" + i).onclick = () => {
+            if (i <= previousColors.length) {
+                color = previousColors[i - 1];
+                previousColors.splice(i - 1, 1);
+                updatePaletteColors();
+            }
+        }
+    }
 }
 
 function createDot(row, column) {
@@ -75,6 +92,17 @@ function draw(x, y) {
     dot.classList.add("glow");
     dot.style.background = getColor();
     dot.style.boxShadow = "0 0px 12px " + getColor(0.6);
+    updatePaletteColors();
+}
+
+function updatePaletteColors() {
+    if (previousColors[0] === color) {
+        return;
+    }
+    previousColors.unshift(color);
+    for (let i = 1; i <= Math.min(NUM_OF_COLORS, previousColors.length); i++) {
+        document.getElementById("color-" + i).style.background = "rgb(" + previousColors[i-1][0] +"," + previousColors[i-1][1] + "," + previousColors[i-1][2] + ")";
+    }
 }
 
 function getColor(opacity = 1) {
