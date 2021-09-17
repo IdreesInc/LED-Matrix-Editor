@@ -60,6 +60,8 @@ function initColorWheel() {
     colorWheel.redraw();
 
     palette.style.background = getColor();
+    // Add transition duration after setting everything up
+    palette.style.transitionDuration = "0.35s";
     updatePaletteColors();
 
     for (let i = 1; i <= NUM_OF_COLORS; i++) {
@@ -67,6 +69,7 @@ function initColorWheel() {
             if (i <= previousColors.length) {
                 color = previousColors[i - 1];
                 previousColors.splice(i - 1, 1);
+                palette.style.background = getColor();
                 updatePaletteColors();
             }
         }

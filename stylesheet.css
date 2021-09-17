@@ -87,6 +87,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    flex: 1;
 }
 
 .color-row {
@@ -95,6 +96,7 @@ body {
     background: rgb(36, 36, 36);
     border-radius: 50px;
     box-sizing: border-box;
+    justify-content: space-between;
 }
 
 .color {
