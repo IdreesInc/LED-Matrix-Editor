@@ -1,4 +1,4 @@
-const INITIAL_COLOR = [255, 202, 58];
+const INITIAL_COLOR = [255, 64, 64];
 const NUM_OF_COLORS = 9;
 const OFF_COLOR = "rgb(155, 155, 155)";
 
@@ -9,7 +9,7 @@ let ctx = canvas.getContext("2d");
 let color = INITIAL_COLOR;
 let previousColors = [
     [255, 146, 76],
-    [255, 64, 64],
+    [255, 202, 58],
     [138, 201, 38],
     [25, 130, 196]
 
@@ -20,8 +20,16 @@ let eraser = false;
 function init() {
     initMatrix();
     initColorUI();
+    window.onresize = resizePalette;
     if (inIframe()) {
         document.body.style.background = "none";
+        document.getElementById("signature").style.display = "none";
+        window.top.postMessage("frame-height: " + window.document.body.scrollHeight, "*");
+        window.onmessage = (e) => {
+            if (typeof e.data === "string" && e.data === "clear") {
+                clear();
+            }
+        };
     }
 }
 
@@ -52,11 +60,10 @@ function initMatrix() {
 }
 
 function initColorUI() {
-    let width = Math.min(palette.offsetWidth / 4, 250);
     colorWheel = new ReinventedColorWheel({
         appendTo: document.getElementById("color-wheel"),
         rgb: INITIAL_COLOR,
-        wheelDiameter: width,
+        wheelDiameter: 200,
         wheelThickness: 20,
         handleDiameter: 20,
         wheelReflectsSaturation: false,
@@ -66,11 +73,7 @@ function initColorUI() {
         },
     });
 
-    document.getElementById("color-wheel").style.width = width + "px";
-    document.getElementById("color-wheel").style.height = width + "px";
-    document.documentElement.style.setProperty("--circle-diameter", width * 0.40 + "px");
-    
-    colorWheel.redraw();
+    resizePalette();
 
     palette.style.background = getColor();
     // Add transition duration after setting everything up
@@ -107,15 +110,10 @@ function initColorUI() {
     }
 
     document.getElementById("clear").onclick = () => {
-        if (confirm("Are you sure you want to clear away everything? There is no way to undo this!")) {
-            let previousEraser = eraser;
-            eraser = true;
-            for (let row = 0; row < 32; row++) {
-                for (let column = 0; column < 32; column++) {
-                    draw(column, row);
-                }
-            }
-            eraser = previousEraser;
+        if (inIframe()) {
+            window.top.postMessage("clear", "*");
+        } else if (confirm("Are you sure you want to clear away everything? There is no way to undo this!")) {
+            clear();
         }
     }
 }
@@ -130,6 +128,15 @@ function createDot(row, column) {
     dot.classList.add("dim");
     cell.appendChild(dot);
     matrix.appendChild(cell);
+}
+
+function resizePalette() {
+    let width = Math.min(palette.offsetWidth / 4, 250);
+    document.getElementById("color-wheel").style.width = width + "px";
+    document.getElementById("color-wheel").style.height = width + "px";
+    document.documentElement.style.setProperty("--circle-diameter", width * 0.40 + "px");
+    colorWheel.wheelDiameter = width;
+    colorWheel.redraw();
 }
 
 function drawAtCoordinates(x, y) {
@@ -159,6 +166,17 @@ function draw(row, column) {
         ctx.fill();
         ctx.closePath();
     }
+}
+
+function clear() {
+    let previousEraser = eraser;
+    eraser = true;
+    for (let row = 0; row < 32; row++) {
+        for (let column = 0; column < 32; column++) {
+            draw(column, row);
+        }
+    }
+    eraser = previousEraser;
 }
 
 function updatePaletteColors() {
