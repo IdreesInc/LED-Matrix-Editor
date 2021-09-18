@@ -137,6 +137,9 @@ function resizePalette() {
     document.documentElement.style.setProperty("--circle-diameter", width * 0.40 + "px");
     colorWheel.wheelDiameter = width;
     colorWheel.redraw();
+    if (inIframe()) {
+        window.top.postMessage("frame-height: " + window.document.body.scrollHeight, "*");
+    }
 }
 
 function drawAtCoordinates(x, y) {
