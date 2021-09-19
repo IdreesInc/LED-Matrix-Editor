@@ -1,6 +1,7 @@
 :root {
     --circle-diameter: 80px;
     --color-container-space: 10px;
+    --color: white;
 }
 
 html, body {
@@ -18,6 +19,35 @@ body {
     background: linear-gradient(to top right, #66BDCC, #A1FFCE);
 }
 
+#examples {
+    /* width: 96vw; */
+    max-width: 800px;
+    display: flex;
+    background: var(--color);
+    border-radius: 30px;
+    margin: 10px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.25);
+    transition-duration: 0.25s;
+}
+
+.example, #example-label {
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    margin: 10px;
+    color: white;
+    font-family: sans-serif;
+    height: 1.5ch;
+    text-shadow: 0 0 2px #000;
+}
+
+.example {
+    background: rgba(255, 255, 255, 0.26);
+}
+
+#example-label {
+    margin-right: 0;
+}
+
 #matrix {
     display: flex;
     flex-wrap: wrap;
@@ -25,6 +55,7 @@ body {
     height: 96vw;
     max-width: 800px;
     max-height: 800px;
+    margin-top: 20px;
     background: black;
     box-shadow: 0px 10px 15px rgba(0,0,0,0.35);
     touch-action: pinch-zoom;
@@ -73,6 +104,7 @@ body {
     padding: 15px;
     display: flex;
     box-sizing: border-box;
+    background: var(--color);
 }
 
 .spacer {
@@ -172,6 +204,10 @@ body {
 
     .dangerous-control:hover {
         background: rgb(255, 79, 79);
+    }
+
+    .example:hover {
+        cursor: pointer;
     }
 }
 

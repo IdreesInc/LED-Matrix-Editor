@@ -69,13 +69,13 @@ function initColorUI() {
         wheelReflectsSaturation: false,
         onChange: function (newColor) {
             color = newColor.rgb;
-            palette.style.background = getColor();
+            document.documentElement.style.setProperty("--color", getColor());
         },
     });
 
     resizePalette();
 
-    palette.style.background = getColor();
+    document.documentElement.style.setProperty("--color", getColor());
     // Add transition duration after setting everything up
     palette.style.transitionDuration = "0.35s";
     updatePaletteColors();
@@ -85,7 +85,7 @@ function initColorUI() {
             if (i <= previousColors.length) {
                 color = previousColors[i - 1];
                 previousColors.splice(i - 1, 1);
-                palette.style.background = getColor();
+                document.documentElement.style.setProperty("--color", getColor());
                 eraser = false;
                 document.getElementById("eraser").classList.remove("control-selected");
                 updatePaletteColors();
@@ -96,7 +96,7 @@ function initColorUI() {
 
     document.getElementById("eraser").onclick = () => {
         eraser = true;
-        palette.style.background = "rgba(255, 255, 255, 0.5)";
+        document.documentElement.style.setProperty("--color", "rgba(255, 255, 255, 0.5)");
         document.getElementById("eraser").classList.add("control-selected");
     }
 
@@ -177,6 +177,30 @@ function clear() {
         }
     }
     eraser = previousEraser;
+}
+
+function drawImage(url) {
+    let previousEraser = eraser;
+    eraser = false;
+    let image = new Image();
+    image.onload = () => {
+        ctx.drawImage(image, 0, 0, 32, 32);
+        let imageData = ctx.getImageData(0, 0, 32, 32).data;
+        for (let j = 0; j < imageData.length; j += 4) {
+            let red = imageData[j];
+            let green = imageData[j + 1];
+            let blue = imageData[j + 2];
+            let alpha = imageData[j + 3];
+            if (alpha > 0.1) {
+                color = [red, green, blue];
+                draw(Math.floor(Math.floor(j / 4) / 32), Math.floor(j / 4) % 32);
+            }
+        }
+        eraser = previousEraser;
+        updateWheel();
+    };
+    image.src = url;
+    clear();
 }
 
 function updatePaletteColors() {
