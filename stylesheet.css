@@ -52,7 +52,7 @@ body {
 }
 
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 600px) {
     .example, #example-label {
         font-size: 12px;
     }
