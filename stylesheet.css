@@ -20,23 +20,24 @@ body {
 }
 
 #examples {
-    /* width: 96vw; */
-    max-width: 800px;
+    width: 100%;
+    max-width: min(500px, 96vw);
     display: flex;
+    justify-content: space-evenly;
     background: var(--color);
     border-radius: 30px;
     margin: 10px;
+    padding: 5px;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.25);
     transition-duration: 0.25s;
+    box-sizing: border-box;
 }
 
 .example, #example-label {
-    padding: 5px 10px 5px 10px;
+    padding: 8px 10px 8px 10px;
     border-radius: 10px;
-    margin: 10px;
     color: white;
     font-family: sans-serif;
-    height: 1.5ch;
     text-shadow: 0 0 2px #000;
 }
 
@@ -46,6 +47,15 @@ body {
 
 #example-label {
     margin-right: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+@media screen and (max-width: 1000px) {
+    .example, #example-label {
+        font-size: 12px;
+    }
 }
 
 #matrix {
