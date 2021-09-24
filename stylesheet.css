@@ -158,6 +158,8 @@ body {
     justify-content: center;
     align-items: center;
     background: white;
+    overflow: hidden;
+    position: relative;
 }
 
 .control-selected {
@@ -170,6 +172,21 @@ body {
     width: 60%;
     height: 60%;
     transform: scale(-1, -1);
+}
+
+.import-icon {
+    background-image: url("./images/frame.png");
+    background-size: contain;
+    width: 60%;
+    height: 60%;
+}
+
+#import-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 2;
 }
 
 .clear-icon {
@@ -209,6 +226,10 @@ body {
         transform: scale(1.1);
         transition-duration: 0.25s;
         z-index: 2;
+        cursor: pointer;
+    }
+
+    #import-input:hover {
         cursor: pointer;
     }
 

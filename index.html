@@ -24,18 +24,22 @@
                     <div class="circle" id="color-6"></div>
                     <div class="circle" id="color-7"></div>
                     <div class="circle" id="color-8"></div>
-                    <div class="circle" id="color-9"></div>
                     <div id="eraser" class="circle control" title="Eraser">
                         <div class="eraser-icon"></div>
                     </div>
+                    <div id="clear" class="circle control dangerous-control" title="Clear away everything">
+                        <div class="clear-icon"></div>
+                    </div>
+
                 </div>
             </div>
             <div id="color-controls">
                 <div id="save" class="circle control" title="Save your design">
                     <div class="save-icon"></div>
                 </div>
-                <div id="clear" class="circle control dangerous-control" title="Clear away everything">
-                    <div class="clear-icon"></div>
+                <div id="import" class="circle control">
+                    <input type="file" id="import-input" accept="image/png, image/jpeg" title="Upload an image">
+                    <div class="import-icon"></div>
                 </div>
             </div>
         </div>
@@ -50,6 +54,7 @@
         <canvas id="canvas" width="32" height="32"></canvas>
         <div id="signature">
             Made with ❤ by <a href="https://idreesinc.com" target="_blank">Idrees Hassan</a> - MIT License - Source available <a href="https://github.com/IdreesInc/LED-Matrix-Editor" target="_blank">here</a>
+        </div>
         <script src="./application.js"></script>
     </body>
 </html>

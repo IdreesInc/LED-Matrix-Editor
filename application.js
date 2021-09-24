@@ -1,5 +1,5 @@
 const INITIAL_COLOR = [255, 64, 64];
-const NUM_OF_COLORS = 9;
+const NUM_OF_COLORS = 8;
 const OFF_COLOR = "rgb(155, 155, 155)";
 
 let matrix = document.getElementById("matrix");
@@ -19,7 +19,7 @@ let eraser = false;
 
 function init() {
     initMatrix();
-    initColorUI();
+    initPalette();
     window.onresize = resizePalette;
     if (inIframe()) {
         document.body.style.background = "none";
@@ -59,7 +59,7 @@ function initMatrix() {
     }));
 }
 
-function initColorUI() {
+function initPalette() {
     colorWheel = new ReinventedColorWheel({
         appendTo: document.getElementById("color-wheel"),
         rgb: INITIAL_COLOR,
@@ -116,6 +116,17 @@ function initColorUI() {
             clear();
         }
     }
+
+    document.getElementById("import-input").addEventListener("change", () => {
+        let file = document.getElementById("import-input").files[0];
+        if (file) {
+            let reader = new FileReader();
+            reader.addEventListener("load", function () {
+              drawImage(reader.result);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    });
 }
 
 function createDot(row, column) {
