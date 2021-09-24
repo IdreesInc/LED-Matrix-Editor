@@ -1,6 +1,8 @@
 const INITIAL_COLOR = [255, 64, 64];
 const NUM_OF_COLORS = 8;
 const OFF_COLOR = "rgb(155, 155, 155)";
+const MATRIX_SIZE = 32; // If adjusted, stylesheet must also be adjusted to match
+const CANVAS_SIZE = 256;
 
 let matrix = document.getElementById("matrix");
 let palette = document.getElementById("palette");
@@ -34,8 +36,8 @@ function init() {
 }
 
 function initMatrix() {
-    for (let row = 0; row < 32; row++) {
-        for (let column = 0; column < 32; column++) {
+    for (let row = 0; row < MATRIX_SIZE; row++) {
+        for (let column = 0; column < MATRIX_SIZE; column++) {
             createDot(row, column);
         }
     }
@@ -152,8 +154,8 @@ function resizePalette() {
 
 function drawAtCoordinates(x, y) {
     let rect = matrix.getBoundingClientRect();
-    let column = Math.floor(x / (rect.width / 32));
-    let row = Math.floor(y / (rect.height / 32));
+    let column = Math.floor(x / (rect.width / MATRIX_SIZE));
+    let row = Math.floor(y / (rect.height / MATRIX_SIZE));
     draw(row, column);
 }
 
@@ -173,7 +175,8 @@ function draw(row, column) {
         updatePaletteColors();
         ctx.beginPath();
         ctx.fillStyle = getColor();
-        ctx.rect(column, row, 1, 1);
+        let size = CANVAS_SIZE / MATRIX_SIZE;
+        ctx.rect(column * size, row * size, size, size);
         ctx.fill();
         ctx.closePath();
     }
@@ -182,8 +185,8 @@ function draw(row, column) {
 function clear() {
     let previousEraser = eraser;
     eraser = true;
-    for (let row = 0; row < 32; row++) {
-        for (let column = 0; column < 32; column++) {
+    for (let row = 0; row < MATRIX_SIZE; row++) {
+        for (let column = 0; column < MATRIX_SIZE; column++) {
             draw(column, row);
         }
     }
@@ -195,8 +198,8 @@ function drawImage(url) {
     eraser = false;
     let image = new Image();
     image.onload = () => {
-        ctx.drawImage(image, 0, 0, 32, 32);
-        let imageData = ctx.getImageData(0, 0, 32, 32).data;
+        ctx.drawImage(image, 0, 0, MATRIX_SIZE, MATRIX_SIZE);
+        let imageData = ctx.getImageData(0, 0, MATRIX_SIZE, MATRIX_SIZE).data;
         for (let j = 0; j < imageData.length; j += 4) {
             let red = imageData[j];
             let green = imageData[j + 1];
@@ -204,7 +207,7 @@ function drawImage(url) {
             let alpha = imageData[j + 3];
             if (alpha > 0.1) {
                 color = [red, green, blue];
-                draw(Math.floor(Math.floor(j / 4) / 32), Math.floor(j / 4) % 32);
+                draw(Math.floor(Math.floor(j / 4) / MATRIX_SIZE), Math.floor(j / 4) % MATRIX_SIZE);
             }
         }
         eraser = previousEraser;
