@@ -161,12 +161,13 @@ function drawAtCoordinates(x, y) {
 
 function draw(row, column) {
     let dot = document.getElementById("dot-" + row + "-" + column);
+    let size = CANVAS_SIZE / MATRIX_SIZE;
     if (eraser) {
         dot.classList.add("dim");
         dot.classList.remove("glow");
         dot.style.boxShadow = null;
         dot.style.background = OFF_COLOR;
-        ctx.clearRect(column, row, 1, 1);
+        ctx.clearRect(column * size, row * size, size, size);
     } else {
         dot.classList.remove("dim");
         dot.classList.add("glow");
@@ -175,7 +176,6 @@ function draw(row, column) {
         updatePaletteColors();
         ctx.beginPath();
         ctx.fillStyle = getColor();
-        let size = CANVAS_SIZE / MATRIX_SIZE;
         ctx.rect(column * size, row * size, size, size);
         ctx.fill();
         ctx.closePath();
