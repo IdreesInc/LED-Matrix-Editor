@@ -75,7 +75,7 @@ function initPalette() {
         },
     });
 
-    resizePalette();
+    resizePalette(false);
 
     document.documentElement.style.setProperty("--color", getColor());
     // Add transition duration after setting everything up
@@ -143,13 +143,15 @@ function createDot(row, column) {
     matrix.appendChild(cell);
 }
 
-function resizePalette() {
-    let width = Math.min(palette.offsetWidth / 4, 250);
-    document.getElementById("color-wheel").style.width = width + "px";
-    document.getElementById("color-wheel").style.height = width + "px";
-    document.documentElement.style.setProperty("--circle-diameter", width * 0.40 + "px");
-    colorWheel.wheelDiameter = width;
-    colorWheel.redraw();
+function resizePalette(delay=true) {
+    setTimeout(() => {
+        let width = Math.min(palette.offsetWidth / 4, 250);
+        document.getElementById("color-wheel").style.width = width + "px";
+        document.getElementById("color-wheel").style.height = width + "px";
+        document.documentElement.style.setProperty("--circle-diameter", width * 0.40 + "px");
+        colorWheel.wheelDiameter = width;
+        colorWheel.redraw();
+    }, delay ? 750 : 0);
 }
 
 function drawAtCoordinates(x, y) {
