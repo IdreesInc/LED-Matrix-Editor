@@ -2,7 +2,7 @@ const INITIAL_COLOR = [255, 64, 64];
 const NUM_OF_COLORS = 8;
 const OFF_COLOR = "rgb(155, 155, 155)";
 const MATRIX_SIZE = 32; // If adjusted, stylesheet must also be adjusted to match
-const CANVAS_SIZE = 256;
+const CANVAS_SIZE = 32;
 
 let matrix = document.getElementById("matrix");
 let palette = document.getElementById("palette");
